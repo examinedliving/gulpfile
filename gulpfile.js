@@ -100,9 +100,19 @@ gulp.task('jade', function() {
         .pipe(plugins.rename({
             'extname': '.php'
         }))
-        .pipe(gulp.dest(config.dist_root))
+        .pipe(gulp.dest(config.dist_root));
+});
+
+/*==================================================================
+    Refresh - A task to fire after jade completes with a mild using gulp-wait and live reload - this prevents multiple reloads
+  =================================================================*/
+
+gulp.task('refresh', function() {
+    gulp.src(config.dist_root.changed)
+        .pipe(plugins.wait(200))
         .pipe(plugins.livereload());
 });
+
 
 /*==================================================================
     js - preprocesses, concats, and minifies if production environment the main js file - no vendor stuff
@@ -122,7 +132,7 @@ gulp.task('js', function() {
 });
 
 /*==================================================================
-    functions - processes functions php after preprocessing files have had the <?php & ?> tags stripped
+    functions - processes functions.php after preprocessing files have had the <?php & ?> tags stripped
   =================================================================*/
 
 gulp.task('functions', function() {
@@ -152,6 +162,7 @@ gulp.task('watch', function() {
     gulp.watch(config.watch.less, ['less']);
     gulp.watch(config.watch.less_vendor, ['less_vendor']);
     gulp.watch(config.watch.php, ['functions']);
+    gulp.watch(config.dist.php, ['refresh']);
 
     /*==============================================================
         pp - preprocess files for use with gulp-preprocess they have a distinct extension, because they need to have php "<?php" & "?>" tags stripped prior to being preprocess (included) in functions.php file - each file holds individual or group of functions and is imported from functions.php
