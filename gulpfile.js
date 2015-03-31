@@ -108,7 +108,7 @@ gulp.task('jade', function() {
   =================================================================*/
 
 gulp.task('refresh', function() {
-    gulp.src(config.dist_root.changed)
+    gulp.src(config.dist.changed)
         .pipe(plugins.wait(200))
         .pipe(plugins.livereload());
 });
