@@ -86,7 +86,6 @@ gulp.task('less', function() {
   =================================================================*/
 
 gulp.task('jade', function() {
-
     gulp.src(config.watch.jade, {
         base: process.cwd()
     })
@@ -179,6 +178,15 @@ gulp.task('watch', function() {
             .pipe(plugins.replace(/\.ppp/g, '.pp'))
             .pipe(gulp.dest(config.process.pp_path))
             .pipe(plugins.run(command));
+    });
+
+    var php = gulp.watch(config.watch.all_php);
+    php.on('change', function(event) {
+        gulp.src(event.path, {
+            base: process.cwd()
+        })
+            .pipe(plugins.rename(plugins.util.noop()))
+            .pipe(gulp.dest(config.dist_root));
     });
 });
 
